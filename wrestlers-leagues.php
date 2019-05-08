@@ -34,11 +34,11 @@ require_once( 'includes/lib/class-wrestlers-leagues-taxonomy.php' );
  * @since  1.0.0
  * @return object wrestlers-leagues
  */
-function wrestlers-leagues () {
-	$instance = wrestlers-leagues::instance( __FILE__, '1.0.0' );
+function wrestlers_leagues () {
+	$instance = Wrestlers_Leagues::instance( __FILE__, '1.0.0' );
 
 	if ( is_null( $instance->settings ) ) {
-		$instance->settings = wrestlers-leagues_Settings::instance( $instance );
+		$instance->settings = Wrestlers_Leagues_Settings::instance( $instance );
 	}
 
 	return $instance;

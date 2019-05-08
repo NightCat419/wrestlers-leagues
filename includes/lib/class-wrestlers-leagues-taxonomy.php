@@ -2,7 +2,7 @@
 
 if ( ! defined( 'ABSPATH' ) ) exit;
 
-class wrestlers-leagues_Taxonomy {
+class Wrestlers_Leagues_Taxonomy {
 
 	/**
 	 * The name for the taxonomy.

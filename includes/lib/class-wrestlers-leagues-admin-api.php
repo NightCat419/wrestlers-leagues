@@ -2,7 +2,7 @@
 
 if ( ! defined( 'ABSPATH' ) ) exit;
 
-class wrestlers-leagues_Admin_API {
+class Wrestlers_Leagues_Admin_API {
 
 	/**
 	 * Constructor function

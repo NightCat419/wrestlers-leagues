@@ -2,7 +2,7 @@
 
 if ( ! defined( 'ABSPATH' ) ) exit;
 
-class wrestlers-leagues {
+class Wrestlers_Leagues {
 
 	/**
 	 * The single instance of wrestlers-leagues.

@@ -2,7 +2,7 @@
 
 if ( ! defined( 'ABSPATH' ) ) exit;
 
-class wrestlers-leagues_Post_Type {
+class Wrestlers_Leagues_Post_Type {
 
 	/**
 	 * The name for the custom post type.

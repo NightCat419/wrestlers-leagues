@@ -2,7 +2,7 @@
 
 if ( ! defined( 'ABSPATH' ) ) exit;
 
-class wrestlers-leagues_Settings {
+class Wrestlers_Leagues_Settings {
 
 	/**
 	 * The single instance of wrestlers-leagues_Settings.
