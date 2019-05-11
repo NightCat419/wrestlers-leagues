@@ -19,9 +19,14 @@
 
 if ( ! defined( 'ABSPATH' ) ) exit;
 
+define('WP_KWL_PLUGIN_DIR', WP_PLUGIN_DIR . '/wrestlers-leagues');
+
 // Load plugin class files
 require_once( 'includes/class-wrestlers-leagues.php' );
 require_once( 'includes/class-wrestlers-leagues-settings.php' );
+
+// Load plugin core files
+require_once ('includes/core/class-um-customize.php');
 
 // Load plugin libraries
 require_once( 'includes/lib/class-wrestlers-leagues-admin-api.php' );
@@ -44,4 +49,7 @@ function wrestlers_leagues () {
 	return $instance;
 }
 
-wrestlers-leagues();
+$wl_instance = wrestlers_leagues();
+$wl_instance->install();
+
+
