@@ -49,10 +49,24 @@ class UM_Customize{
     }
 
     public function send_um_message($from, $to, $message){
-        $_POST['content']  = $message;
-//        $conversation_id = UM()->Messaging_API()->api()->create_conversation( $to, $from );;
-//        $_POST['content'] = "";
-        do_action('um_after_new_message', $to, $from, $message );
+        if ( ! UM()->Messaging_API()->api()->can_message( $to ) ) {
+            error_log("UM()->Messaging_API()->api()->can_message( $to ) : error");
+        }
+
+        $_POST['content'] = $message;
+        // Create/Update conversation and add message
+        $conversation_id = UM()->Messaging_API()->api()->create_conversation( $to, get_current_user_id() );
+        if ( empty( $conversation_id ) ) {
+            error_log("conversation_id is empty");
+        }
+        $response = UM()->Messaging_API()->api()->get_conversation_id( $to, get_current_user_id() );
+        $output['conversation_id'] = $response['conversation_id'];
+        $output['last_updated'] = $response['last_updated'];
+        $output['messages'] = UM()->Messaging_API()->api()->get_conversation( $to, get_current_user_id(), $conversation_id );
+        $output['limit_hit'] = UM()->Messaging_API()->api()->limit_reached() ? 1 : 0;
+        $output['chat_history_download'] = UM()->Messaging_API()->gdpr()->get_download_url( $response['conversation_id'] );
+
+//        wp_send_json_success( $output );
     }
 
 }

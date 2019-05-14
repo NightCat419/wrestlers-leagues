@@ -43,8 +43,9 @@ class Wrestlers_Leagues_Taxonomy {
 	 * @since 	1.0.0
 	 */
 	public $taxonomy_args;
+    public $terms;
 
-	public function __construct ( $taxonomy = '', $plural = '', $single = '', $post_types = array(), $tax_args = array() ) {
+    public function __construct ( $taxonomy = '', $plural = '', $single = '', $post_types = array(), $terms=array(), $tax_args = array() ) {
 
 		if ( ! $taxonomy || ! $plural || ! $single ) return;
 
@@ -56,6 +57,7 @@ class Wrestlers_Leagues_Taxonomy {
 			$post_types = array( $post_types );
 		}
 		$this->post_types = $post_types;
+		$this->terms = $terms;
 		$this->taxonomy_args = $tax_args;
 
 		// Register taxonomy
@@ -111,6 +113,21 @@ class Wrestlers_Leagues_Taxonomy {
         $args = array_merge($args, $this->taxonomy_args);
 
         register_taxonomy( $this->taxonomy, $this->post_types, apply_filters( $this->taxonomy . '_register_args', $args, $this->taxonomy, $this->post_types ) );
+
+        foreach ($this->terms as $term){
+            $public_term_id = term_exists( $term['slug'], $this->taxonomy);
+            if(!$public_term_id){
+                $public_term_id = wp_insert_term(
+                    $term['name'], // the term
+                    $this->taxonomy, // the taxonomy
+                    array(
+                        'description' => $term['description'],
+                        'slug' => $term['slug'],
+                    )
+                );
+            }
+        }
+
     }
 
 }

@@ -76,25 +76,107 @@ class Wrestlers_Leagues {
 	 */
 	public $script_suffix;
 
-	public $um_customize;
+    /**
+     * @var UM_Customize
+     */
+    public $um_customize;
 
-	static public $post_type_wrestler = 'kwl_wrestlers';
+    /**
+     * @var OceanWP_Customize
+     */
+    public $oceanwp_customize;
 
+    /**
+     * @var string
+     */
+    static public $post_type_wrestler = 'kwl_wrestlers';
+
+    /**
+     * @var string
+     */
     static public $post_type_league = 'kwl_leagues';
 
+    /**
+     * @var string
+     */
     static public $taxonomy_leagues_category = 'kwl_league_category';
 
+    /**
+     * @var string
+     */
     static public $tax_term_leagues_public = 'kwl_public';
 
+    /**
+     * @var string
+     */
     static public $tax_term_leagues_private = 'kwl_private';
 
+    /**
+     * @var string
+     */
+    static public $taxonomy_wrestlers_brand = 'kwl_wrestlers_brand';
+
+    /**
+     * @var string
+     */
+    static public $taxonomy_wrestlers_tags = 'kwl_wrestlers_tags';
+
+    /**
+     * @var string
+     */
+    static public $tax_term_wrestlers_smackdown = 'kwl_smackdown';
+
+    /**
+     * @var string
+     */
+    static public $tax_term_wrestlers_raw = 'kwl_raw';
+
+    /**
+     * @var string
+     */
+    static public $tax_term_wrestlers_205live = 'kwl_205live';
+
+    /**
+     * @var string
+     */
+    static public $tax_term_wrestlers_superstar = 'kwl_superstar';
+
+    /**
+     * @var string
+     */
+    static public $tax_term_wrestlers_nxt = 'kwl_nxt';
+
+
+    // Meta box fields for Leagues custom post type
+    /**
+     * @var string : limit count of teams for league.
+     */
     static public $limit_teams_league_meta = 'limit_teams_league-meta';
 
+    /**
+     * @var string : limit count of wrestlers of team for league.
+     */
     static public $limit_wrestlers_team_meta = 'limit_wrestlers_team-meta';
 
+    /**
+     * @var string : list of teams for league.
+     */
     static public $teams_of_league_meta = 'teams_of_league-meta';
 
+    /**
+     * @var string : commissioner for league
+     */
     static public $league_commissioner_meta = 'league_commissioner-meta';
+
+    // Meta box fields for Wrestlers custom post type
+
+    static public $wrestler_brand_meta = 'wrestler_brand-meta';
+
+    public static $wrestler_images_meta = 'wrestler_images-meta';
+
+    public $brand_logos;
+
+    public $brand_back_images;
 
     /**
 	 * Constructor function.
@@ -106,6 +188,21 @@ class Wrestlers_Leagues {
 		$this->_version = $version;
 		$this->_token = 'wrestlers-leagues';
 
+        $this->brand_logos = array(
+            Wrestlers_Leagues::$tax_term_wrestlers_205live => 'https://lds.sos4digitalmarketing.com/wp-content/uploads/2019/03/1-205-a.png',
+            Wrestlers_Leagues::$tax_term_wrestlers_raw => 'https://lds.sos4digitalmarketing.com/wp-content/uploads/2019/03/Raw-transparent-background.png',
+            Wrestlers_Leagues::$tax_term_wrestlers_smackdown => 'https://lds.sos4digitalmarketing.com/wp-content/uploads/2019/03/smackdown_600x300.png',
+            Wrestlers_Leagues::$tax_term_wrestlers_superstar => 'https://lds.sos4digitalmarketing.com/wp-content/uploads/2019/04/Wrestling-image-04.05.19.png',
+            Wrestlers_Leagues::$tax_term_wrestlers_nxt => 'https://lds.sos4digitalmarketing.com/wp-content/uploads/2019/03/NXT_logo.png',
+        );
+        $this->brand_back_images = array(
+            Wrestlers_Leagues::$tax_term_wrestlers_205live => 'https://lds.sos4digitalmarketing.com/wp-content/uploads/2019/03/205-live-logo.png',
+            Wrestlers_Leagues::$tax_term_wrestlers_raw => 'https://lds.sos4digitalmarketing.com/wp-content/uploads/2019/03/Raw-Logo.png',
+            Wrestlers_Leagues::$tax_term_wrestlers_smackdown => 'https://lds.sos4digitalmarketing.com/wp-content/uploads/2019/03/Smackdown-logo.png',
+            Wrestlers_Leagues::$tax_term_wrestlers_superstar => 'https://lds.sos4digitalmarketing.com/wp-content/uploads/2019/03/Raw-Logo.png',
+            Wrestlers_Leagues::$tax_term_wrestlers_nxt => 'https://lds.sos4digitalmarketing.com/wp-content/uploads/2019/03/nxt-logo-1.png',
+        );
+
 		// Load plugin environment variables
 		$this->file = $file;
 		$this->dir = dirname( $this->file );
@@ -113,8 +210,10 @@ class Wrestlers_Leagues {
 		$this->assets_url = esc_url( trailingslashit( plugins_url( '/assets/', $this->file ) ) );
 
 		$this->script_suffix = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
+        $this->script_suffix = '';
 
 		$this->um_customize = new UM_Customize();
+		$this->oceanwp_customize = new OceanWP_Customize();
 
 		register_activation_hook( $this->file, array( $this, 'install' ) );
 
@@ -136,37 +235,41 @@ class Wrestlers_Leagues {
 		add_action( 'init', array( $this, 'load_localisation' ), 0 );
 	} // End __construct ()
 
-	/**
-	 * Wrapper function to register a new post type
-	 * @param  string $post_type   Post type name
-	 * @param  string $plural      Post type item plural name
-	 * @param  string $single      Post type item single name
-	 * @param  string $description Description of post type
-	 * @return object              Post type class object
-	 */
-	public function register_post_type ( $post_type = '', $plural = '', $single = '', $description = '', $options = array() ) {
+    /**
+     * Wrapper function to register a new post type
+     * @param  string $post_type Post type name
+     * @param  string $plural Post type item plural name
+     * @param  string $single Post type item single name
+     * @param string $enter_title Helper title text for create page of admin area
+     * @param  string $description Description of post type
+     * @param array $options
+     * @return object Post type class object
+     */
+	public function register_post_type ( $post_type = '', $plural = '', $single = '', $enter_title = 'Enter Title', $description = '', $options = array() ) {
 
 		if ( ! $post_type || ! $plural || ! $single ) return;
 
-		$post_type = new Wrestlers_Leagues_Post_Type( $post_type, $plural, $single, $description, $options );
+		$post_type = new Wrestlers_Leagues_Post_Type( $post_type, $plural, $single, $description, $enter_title, $options );
 
 		return $post_type;
 	}
 
 
     /**
-	 * Wrapper function to register a new taxonomy
-	 * @param  string $taxonomy   Taxonomy name
-	 * @param  string $plural     Taxonomy single name
-	 * @param  string $single     Taxonomy plural name
-	 * @param  array  $post_types Post types to which this taxonomy applies
-	 * @return object             Taxonomy class object
-	 */
-	public function register_taxonomy ( $taxonomy = '', $plural = '', $single = '', $post_types = array(), $taxonomy_args = array() ) {
+     * Wrapper function to register a new taxonomy
+     * @param  string $taxonomy Taxonomy name
+     * @param  string $plural Taxonomy single name
+     * @param  string $single Taxonomy plural name
+     * @param  array $post_types Post types to which this taxonomy applies
+     * @param array $terms
+     * @param array $taxonomy_args
+     * @return object Taxonomy class object
+     */
+	public function register_taxonomy ( $taxonomy = '', $plural = '', $single = '', $post_types = array(), $terms = array(), $taxonomy_args = array() ) {
 
 		if ( ! $taxonomy || ! $plural || ! $single ) return;
 
-		$taxonomy = new Wrestlers_Leagues_Taxonomy( $taxonomy, $plural, $single, $post_types, $taxonomy_args );
+		$taxonomy = new Wrestlers_Leagues_Taxonomy( $taxonomy, $plural, $single, $post_types, $terms, $taxonomy_args );
 
 		return $taxonomy;
 	}
@@ -180,6 +283,8 @@ class Wrestlers_Leagues {
 	public function enqueue_styles () {
 		wp_register_style( $this->_token . '-frontend', esc_url( $this->assets_url ) . 'css/frontend.css', array(), $this->_version );
 		wp_enqueue_style( $this->_token . '-frontend' );
+        wp_register_style( 'bootstrap-4.0', 'https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css', array(), '4.0.0' );
+        wp_enqueue_style( 'bootstrap-4.0' );
 	} // End enqueue_styles ()
 
 	/**
@@ -311,7 +416,7 @@ class Wrestlers_Leagues {
     public function load_wl_template($template) {
         global $post;
 
-        if ($post->post_type == "kwl_wrestlers" && $template !== locate_template(array("single-movie.php"))){
+        if ($post->post_type == Wrestlers_Leagues::$post_type_wrestler){
             /* This is a "movie" post
              * AND a 'single movie template' is not found on
              * theme or child theme directories, so load it
@@ -328,20 +433,94 @@ class Wrestlers_Leagues {
      */
     private function _register_post_types(){
 
-        $this->register_post_type('kwl_wrestlers', 'Wrestlers', 'Wrestler');
+        $this->register_post_type('kwl_wrestlers', 'Wrestlers', 'Wrestler', 'Wrestler Name');
 
-        $this->register_post_type('kwl_leagues', 'Leagues', 'League');
+        $this->register_post_type('kwl_leagues', 'Leagues', 'League', 'League Name');
 
-//        add_filter('single_template', 'load_wl_template');
+
+        add_filter('single_template', array($this, 'load_wl_template'));
 
         add_action( 'add_meta_boxes', array( $this, 'add_metabox'));
         add_action( 'save_post',      array( $this, 'save_metabox' ), 10, 2 );
 
     }
 
+    /**
+     *
+     */
     private function _register_taxonomies(){
-        $this->register_taxonomy(Wrestlers_Leagues::$taxonomy_leagues_category, 'Categories', 'Category', array(Wrestlers_Leagues::$post_type_league));
+        $leagues_terms = array(
+            array(
+                'name'=>'Public',
+                'slug'=>Wrestlers_Leagues::$tax_term_leagues_public,
+                'description'=>'This league is visible to everyone.'
+            ),
+            array(
+                'name'=>'Private',
+                'slug'=>Wrestlers_Leagues::$tax_term_leagues_private,
+                'description'=>'This league is visible to only team members.'
+            )
+        );
+        $this->register_taxonomy(Wrestlers_Leagues::$taxonomy_leagues_category, 'Categories', 'Category', array(Wrestlers_Leagues::$post_type_league), $leagues_terms);
 
+        $wrestlers_terms = [
+            [
+                'name'=>'205live',
+                'slug'=>Wrestlers_Leagues::$tax_term_wrestlers_205live,
+                'description'=>'205 Live.'
+            ],
+            [
+                'name'=>'Raw',
+                'slug'=>Wrestlers_Leagues::$tax_term_wrestlers_raw,
+                'description'=>'Raw.'
+            ],
+            [
+                'name'=>'Smackdown',
+                'slug'=>Wrestlers_Leagues::$tax_term_wrestlers_smackdown,
+                'description'=>'Smack down.'
+            ],
+            [
+                'name'=>'Superstar',
+                'slug'=>Wrestlers_Leagues::$tax_term_wrestlers_superstar,
+                'description'=>'Super star.'
+            ],
+            [
+                'name'=>'NXT',
+                'slug'=>Wrestlers_Leagues::$tax_term_wrestlers_nxt,
+                'description'=>'NXT.'
+            ],
+        ];
+        $this->register_taxonomy(Wrestlers_Leagues::$taxonomy_wrestlers_brand, 'Brands', 'Brand', array(Wrestlers_Leagues::$post_type_wrestler), $wrestlers_terms);
+        $wrestlers_tags_terms = [
+            ['name'=>'A', 'slug'=>'a'],
+            ['name'=>'B', 'slug'=>'b'],
+            ['name'=>'C', 'slug'=>'c'],
+            ['name'=>'D', 'slug'=>'d'],
+            ['name'=>'E', 'slug'=>'e'],
+            ['name'=>'F', 'slug'=>'f'],
+            ['name'=>'G', 'slug'=>'g'],
+            ['name'=>'H', 'slug'=>'h'],
+            ['name'=>'I', 'slug'=>'i'],
+            ['name'=>'J', 'slug'=>'j'],
+            ['name'=>'K', 'slug'=>'k'],
+            ['name'=>'L', 'slug'=>'l'],
+            ['name'=>'M', 'slug'=>'m'],
+            ['name'=>'N', 'slug'=>'n'],
+            ['name'=>'O', 'slug'=>'o'],
+            ['name'=>'P', 'slug'=>'p'],
+            ['name'=>'Q', 'slug'=>'q'],
+            ['name'=>'R', 'slug'=>'r'],
+            ['name'=>'S', 'slug'=>'s'],
+            ['name'=>'T', 'slug'=>'t'],
+            ['name'=>'U', 'slug'=>'u'],
+            ['name'=>'V', 'slug'=>'v'],
+            ['name'=>'W', 'slug'=>'w'],
+            ['name'=>'X', 'slug'=>'x'],
+            ['name'=>'Y', 'slug'=>'y'],
+            ['name'=>'Z', 'slug'=>'z'],
+        ];
+        $this->register_taxonomy(Wrestlers_Leagues::$taxonomy_wrestlers_tags, 'Tags', 'Tag',
+            [Wrestlers_Leagues::$post_type_wrestler], $wrestlers_tags_terms, ['hierarchical' => false]);
     }
 
     /**
@@ -378,38 +557,19 @@ class Wrestlers_Leagues {
         return $output;
     }
 
+    /**
+     *
+     */
     private function _register_post_handlers(){
         ! is_admin() and add_action('init', array($this, 'post_create_league'));
         ! is_admin() and add_action('init', array($this, 'post_join_league'));
     }
 
+    /**
+     *
+     */
     public function post_create_league(){
         if ( !empty($_POST['action']) && $_POST['action'] === 'create_league' ) {
-
-            // insert terms if not exists
-            $public_term_id = term_exists( Wrestlers_Leagues::$tax_term_leagues_public, Wrestlers_Leagues::$taxonomy_leagues_category);
-            if(!$public_term_id){
-                $public_term_id = wp_insert_term(
-                    'Public', // the term
-                    Wrestlers_Leagues::$taxonomy_leagues_category, // the taxonomy
-                    array(
-                        'description' => 'This league is visible to everyone.',
-                        'slug' => Wrestlers_Leagues::$tax_term_leagues_public,
-                    )
-                );
-            }
-            $private_term_id = term_exists( Wrestlers_Leagues::$tax_term_leagues_private, Wrestlers_Leagues::$taxonomy_leagues_category);
-            if(!$private_term_id){
-                $private_term_id = wp_insert_term(
-                    'Private', // the term
-                    Wrestlers_Leagues::$taxonomy_leagues_category, // the taxonomy
-                    array(
-                        'description'=> 'This league is visible to only league members.',
-                        'slug' => Wrestlers_Leagues::$tax_term_leagues_private,
-                    )
-                );
-            }
-
 
             // Create post object
             $my_post = array(
@@ -425,6 +585,7 @@ class Wrestlers_Leagues {
             $post_id = wp_insert_post( $my_post );
             $user_id = get_current_user_id();
             $user = wp_get_current_user();
+            $private_term_id = term_exists( Wrestlers_Leagues::$tax_term_leagues_private, Wrestlers_Leagues::$taxonomy_leagues_category);
             wp_set_post_terms($post_id, $private_term_id['term_id'], Wrestlers_Leagues::$taxonomy_leagues_category);
 
             if($post_id){
@@ -443,21 +604,20 @@ class Wrestlers_Leagues {
                 'status' => 1,
 
             );
-            $wpdb->insert('wp_kwl_league_user', $league_user);
+            $count = $wpdb->insert("{$wpdb->prefix}kwl_league_user", $league_user);
+            error_log("\nwrestler plugin: create league $count.");
 
             if(isset($_POST['friends']) && class_exists("UM_Friends_API")){
                 $this->um_customize->invite_friends($_POST['friends'], $user_id, "Please join to league.");
-//                foreach ($_POST['friends'] as $friendid){
-//                    UM()->Friends_API()->api()->add($friendid, $user_id);
-//                    do_action('um_friends_after_user_friend_request', $friendid, $user_id );
-//                }
             }
             header("Location: ".home_url("/user-profile"));
             die();
-//            wp_die();
         }
     }
 
+    /**
+     *
+     */
     public function post_join_league(){
         if ( !empty($_POST['action']) && $_POST['action'] === 'join_league' ) {
             global $wpdb;
@@ -471,7 +631,7 @@ class Wrestlers_Leagues {
                 'status' => 0,
 
             );
-            $wpdb->insert('wp_kwl_league_user', $league_user);
+            $wpdb->insert("{$wpdb->prefix}kwl_league_user", $league_user);
 
             if(isset($_POST['friends']) && class_exists("UM_Friends_API")){
                 $this->um_customize->invite_friends($_POST['friends'], $user_id, "Please join to league.");
@@ -482,14 +642,24 @@ class Wrestlers_Leagues {
         }
     }
 
+    /**
+     *
+     */
     public function add_metabox(){
+        // register meta boxes for Leagues
         add_meta_box(Wrestlers_Leagues::$limit_teams_league_meta, "Limit of teams per league", array($this, "limit_teams_league"), Wrestlers_Leagues::$post_type_league, "normal", "low");
         add_meta_box(Wrestlers_Leagues::$limit_wrestlers_team_meta, "Limit of wrestlers per team", array($this, "limit_wrestlers_team"), Wrestlers_Leagues::$post_type_league, "normal", "low");
         add_meta_box(Wrestlers_Leagues::$teams_of_league_meta, "Teams of this league", array($this, "teams_of_league"), Wrestlers_Leagues::$post_type_league, "normal", "low");
         add_meta_box(Wrestlers_Leagues::$league_commissioner_meta, "Commissioner of this league", array($this, "commissioner_of_league"), Wrestlers_Leagues::$post_type_league, "normal", "low");
 
+        // register meta boxes for Wrestlers
+//        add_meta_box(Wrestlers_Leagues::$wrestler_brand_meta, "Brand of wrestler", array($this, "wrestler_brand"), Wrestlers_Leagues::$post_type_wrestler, "normal", "low");
+        add_meta_box(Wrestlers_Leagues::$wrestler_images_meta, "Images of wrestler", array($this, "wrestler_images"), Wrestlers_Leagues::$post_type_wrestler, "normal", "low");
     }
 
+    /**
+     *
+     */
     public function limit_teams_league(){
         global $post;
         $custom = get_post_custom($post->ID);
@@ -499,6 +669,9 @@ class Wrestlers_Leagues {
         <?php
     }
 
+    /**
+     *
+     */
     public function limit_wrestlers_team(){
         global $post;
         $custom = get_post_custom($post->ID);
@@ -508,20 +681,38 @@ class Wrestlers_Leagues {
         <?php
     }
 
+    /**
+     *
+     */
     public function teams_of_league(){
         global $post;
+        if($post->post_type != Wrestlers_Leagues::$post_type_league){
+            return;
+        }
         $custom = get_post_custom($post->ID);
 //        $teams_of_league_meta = $custom[$this->teams_of_league_meta][0];
+        global $wpdb;
+        $query = "SELECT l.team_name, u.display_name FROM {$wpdb->prefix}kwl_league_user AS l "
+            ."JOIN {$wpdb->prefix}users AS u ON l.user_id=u.ID "
+            ."WHERE l.league_id={$post->ID}";
+        $teams = $wpdb->get_results($query);
         ?>
         <label>Teams of this league:</label>
         <select multiple="" size="6" name="<?=Wrestlers_Leagues::$teams_of_league_meta?>">
-            <option value="1"><a href="/">Team1</a></option>
-            <option value="1"><a href="/">Team2</a></option>
-            <option value="1"><a href="/">Team3</a></option>
+            <?php
+            foreach ($teams as $row):
+            ?>
+            <option value="1"><a href="/"><?=$row->team_name?> (<?=$row->display_name?>)</a></option>
+            <?php
+            endforeach;
+            ?>
         </select>
         <?php
     }
 
+    /**
+     *
+     */
     public function commissioner_of_league(){
         global $post;
         $custom = get_post_custom($post->ID);
@@ -530,9 +721,77 @@ class Wrestlers_Leagues {
         echo "<label>{$commissioner->display_name}</label>";
     }
 
+    public function wrestler_brand(){
+
+    }
+
+    public function wrestler_images(){
+        global $post_id;
+        wp_nonce_field( Wrestlers_Leagues::$wrestler_images_meta, Wrestlers_Leagues::$wrestler_images_meta.'_nonce' );
+
+        /** @noinspection PhpVoidFunctionResultUsedInspection */
+        echo $this->wrestler_image_uploader_field( Wrestlers_Leagues::$wrestler_images_meta, get_post_meta($post_id, Wrestlers_Leagues::$wrestler_images_meta, true) );
+
+    }
+
+    public function wrestler_image_uploader_field( $name, $value = '' ) {
+
+        $image = 'Upload Image';
+        $button = 'button';
+        $image_size = 'full'; // it would be better to use thumbnail size here (150x150 or so)
+        $display = 'none'; // display state of the "Remove image" button
+
+        ?>
+
+        <p><i>Add Images for Wrestler</i></p>
+
+        <label>
+            <div class="gallery-screenshot clearfix" style="display: flex;">
+                <?php
+                {
+                    $ids = explode(',', $value);
+                    foreach ($ids as $attachment_id) {
+                        $img = wp_get_attachment_image_src($attachment_id, 'thumbnail');
+                        echo '<div class="screen-thumb"><img src="' . esc_url($img[0]) . '" /></div>';
+                    }
+                }
+                ?>
+            </div>
+
+            <input id="edit-gallery" class="button upload_gallery_button" type="button"
+                   value="Add/Edit Gallery"/>
+            <input id="clear-gallery" class="button upload_gallery_button" type="button"
+                   value="Clear"/>
+            <input type="hidden" name="<?php echo esc_attr($name); ?>" id="<?php echo esc_attr($name); ?>" class="gallery_values" value="<?php echo esc_attr($value); ?>">
+        </label>
+        <?php
+    }
+
+    /**
+     *
+     */
     public function save_metabox(){
         global $post;
-        update_post_meta($post->ID, Wrestlers_Leagues::$limit_teams_league_meta, $_POST[Wrestlers_Leagues::$limit_teams_league_meta]);
-        update_post_meta($post->ID, Wrestlers_Leagues::$limit_wrestlers_team_meta, $_POST[Wrestlers_Leagues::$limit_wrestlers_team_meta]);
+        if(is_object($post) && $post->post_type == Wrestlers_Leagues::$post_type_league){
+            update_post_meta($post->ID, Wrestlers_Leagues::$limit_teams_league_meta, $_POST[Wrestlers_Leagues::$limit_teams_league_meta]);
+            update_post_meta($post->ID, Wrestlers_Leagues::$limit_wrestlers_team_meta, $_POST[Wrestlers_Leagues::$limit_wrestlers_team_meta]);
+        }
+        elseif(is_object($post) && $post->post_type == Wrestlers_Leagues::$post_type_wrestler){
+            if ( !isset( $_POST[Wrestlers_Leagues::$wrestler_images_meta.'_nonce'] ) ) {
+                return $post->ID;
+            }
+
+            if ( !wp_verify_nonce( $_POST[Wrestlers_Leagues::$wrestler_images_meta.'_nonce'], Wrestlers_Leagues::$wrestler_images_meta) ) {
+                return $post->ID;
+            }
+
+            if ( isset( $_POST[ Wrestlers_Leagues::$wrestler_images_meta] ) ) {
+                update_post_meta( $post->ID, Wrestlers_Leagues::$wrestler_images_meta, esc_attr($_POST[Wrestlers_Leagues::$wrestler_images_meta]) );
+            } else {
+                update_post_meta( $post->ID, Wrestlers_Leagues::$wrestler_images_meta, '' );
+            }
+        }
+        return null;
     }
+
 }

@@ -68,7 +68,7 @@ $user = wp_get_current_user();
                     $currentid = get_current_user_id();
                     foreach ($players as $pl):
                         if($pl->ID !== $currentid){
-                            echo '<option value="'.$pl->user_id.'">'.$pl->display_name.'</option>';
+                            echo '<option value="'.$pl->ID.'">'.$pl->display_name.'</option>';
                         }
                     endforeach;
                     ?>

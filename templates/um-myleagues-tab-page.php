@@ -7,42 +7,63 @@
  */
 $user_id = get_current_user_id();
 global $wpdb;
+$query = "SELECT u.*, lg.post_title AS name FROM {$wpdb->prefix}kwl_league_user AS u "
+    ."JOIN {$wpdb->prefix}posts AS lg ON u.league_id=lg.ID "
+    ." WHERE u.user_id={$user_id}";
+$leagues_joined = $wpdb->get_results($query);
+
 ?>
 
 <div class="kwl-elements">
-    <table id="my-leagues">
-        <thead>
-        <tr>
-            <th>League Name</th>
-            <th>Team Name</th>
-            <th>Date Joined</th>
-            <th>Is Commissioner</th>
-            <th>Status</th>
-        </tr>
-        </thead>
-        <tbody>
+    <div class="leagues-list">
         <?php
-        $query = "SELECT u.*, lg.post_title AS name FROM wp_kwl_league_user AS u "
-            ."JOIN wp_posts AS lg ON u.league_id=lg.ID "
-            ." WHERE u.user_id={$user_id}";
-            $leagues_joined = $wpdb->get_results($query);
-            $row_num = "even";
-            foreach ($leagues_joined as $league):
-            ?>
-                <tr class="<?=$row_num?>">
-                    <td><a href="<?=get_permalink($league->league_id)?>"><?=$league->name?></a></td>
-                    <td><?=$league->team_name?></td>
-                    <td><?=date("Y-m-d H:i:s", $league->date_join)?></td>
-                    <td><?=$league->is_commissioner ? "Yes" : "No"?></td>
-                    <td><?=$league->status == 1 ? "Joined" : ($league->status == -1 ? "Rejected" : "Waiting")?></td>
-                </tr>
-            <?php
-                $row_num = $row_num == "even" ? "odd" : "even";
-            endforeach;
-            ?>
-        </tbody>
-    </table>
-    <div class="sm-col-6">
+        foreach ($leagues_joined as $league):
+            $custom = get_post_custom($league->league_id);
+        ?>
+            <div class="league-container">
+                <div class="league-title">
+                    <a href="<?=get_permalink($league->league_id)?>"><?=$league->name?></a>
+                </div>
+                <div class="league-wrestlers-description">
+                    <label>Your Wrestlers in <?= $league->name ?> & their stats</label>
+                </div>
+                <div class="container league-wrestlers-list">
+                    <?php
+                    $limit_wrestlers = $custom[Wrestlers_Leagues::$limit_wrestlers_team_meta][0];
+                    for($i = 0; $i < $limit_wrestlers; ):
+                    ?>
+                        <div class="row wrestlers-row">
+                            <div class="col-sm">
+                                <div class="leagues-wrestler" <?php if($i >= $limit_wrestlers) echo "style='display:none;'"?>>
+                                    <label>Pending selection <?= $i++?></label>
+                                </div>
+                            </div>
+                            <div class="col-sm">
+                                <div class="leagues-wrestler" <?php if($i >= $limit_wrestlers) echo "style='display:none;'"?>>
+                                    <label>Pending selection <?= $i++?></label>
+                                </div>
+                            </div>
+                            <div class="col-sm">
+                                <div class="leagues-wrestler" <?php if($i >= $limit_wrestlers) echo "style='display:none;'"?>>
+                                    <label>Pending selection <?= $i++?></label>
+                                </div>
+                            </div>
+                            <div class="col-sm">
+                                <div class="leagues-wrestler" <?php if($i >= $limit_wrestlers) echo "style='display:none;'";?>>
+                                    <label>Pending selection <?= $i++?></label>
+                                </div>
+                            </div>
+                        </div>
+
+                    <?php
+                    endfor;
+                    ?>
+                </div>
+            </div>
+        <?php
+        endforeach;
+        ?>
 
     </div>
+
 </div>

@@ -1,0 +1,10 @@
+.add-match-form{
+    display: flex;
+}
+.add-match-form label{
+    display: block;
+    margin: 10px 0;
+}
+.add-match-form .button-primary{
+    margin-top: 28px;
+}

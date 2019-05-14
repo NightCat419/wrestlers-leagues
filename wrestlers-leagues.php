@@ -27,6 +27,7 @@ require_once( 'includes/class-wrestlers-leagues-settings.php' );
 
 // Load plugin core files
 require_once ('includes/core/class-um-customize.php');
+require_once ('includes/core/class-oceanwp-customize.php');
 
 // Load plugin libraries
 require_once( 'includes/lib/class-wrestlers-leagues-admin-api.php' );

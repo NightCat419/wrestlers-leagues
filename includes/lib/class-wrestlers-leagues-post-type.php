@@ -28,6 +28,8 @@ class Wrestlers_Leagues_Post_Type {
 	 */
 	public $single;
 
+	public $enter_title;
+
 	/**
 	 * The description of the custom post type.
 	 * @var 	string
@@ -44,7 +46,7 @@ class Wrestlers_Leagues_Post_Type {
 	 */
 	public $options;
 
-	public function __construct ( $post_type = '', $plural = '', $single = '', $description = '', $options = array() ) {
+	public function __construct ( $post_type = '', $plural = '', $single = '', $description = '', $enter_title = 'Enter Title', $options = array() ) {
 
 		if ( ! $post_type || ! $plural || ! $single ) return;
 
@@ -53,10 +55,12 @@ class Wrestlers_Leagues_Post_Type {
 		$this->plural = $plural;
 		$this->single = $single;
 		$this->description = $description;
+		$this->enter_title = $enter_title;
 		$this->options = $options;
 
 		// Regsiter post type
 		add_action( 'init' , array( $this, 'register_post_type' ) );
+        add_filter('gettext', array($this, 'custom_enter_title'));
 
 		// Display custom update messages for posts edits
 		add_filter( 'post_updated_messages', array( $this, 'updated_messages' ) );
@@ -113,6 +117,16 @@ class Wrestlers_Leagues_Post_Type {
 
 		register_post_type( $this->post_type, apply_filters( $this->post_type . '_register_args', $args, $this->post_type ) );
 	}
+
+    public function custom_enter_title( $input ) {
+
+        global $post_type;
+
+        if( is_admin() && $input == 'Add title' && $this->post_type == $post_type )
+            return $this->enter_title;
+
+        return $input;
+    }
 
 	/**
 	 * Set up admin messages for post type
