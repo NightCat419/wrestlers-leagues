@@ -86,6 +86,10 @@ class Wrestlers_Leagues {
      */
     public $oceanwp_customize;
 
+    public $request_handlers;
+
+    public $shortcodes;
+
     /**
      * @var string
      */
@@ -214,11 +218,13 @@ class Wrestlers_Leagues {
 
 		$this->um_customize = new UM_Customize();
 		$this->oceanwp_customize = new OceanWP_Customize();
+		$this->request_handlers = new Request_Handlers();
+		$this->shortcodes = new ShortCodes();
 
 		register_activation_hook( $this->file, array( $this, 'install' ) );
 
 		// Load frontend JS & CSS
-		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_styles' ), 10 );
+		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_styles' ), 990 );
 		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_scripts' ), 10 );
 
 		// Load admin JS & CSS
@@ -281,6 +287,8 @@ class Wrestlers_Leagues {
 	 * @return void
 	 */
 	public function enqueue_styles () {
+	    wp_register_style('jquery-modal', "https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.css");
+	    wp_enqueue_style('jquery-modal', 10);
 		wp_register_style( $this->_token . '-frontend', esc_url( $this->assets_url ) . 'css/frontend.css', array(), $this->_version );
 		wp_enqueue_style( $this->_token . '-frontend' );
         wp_register_style( 'bootstrap-4.0', 'https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css', array(), '4.0.0' );
@@ -294,8 +302,11 @@ class Wrestlers_Leagues {
 	 * @return  void
 	 */
 	public function enqueue_scripts () {
+	    wp_register_script('jquery-modal', "https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.js");
+	    wp_enqueue_script('jquery-modal');
 		wp_register_script( $this->_token . '-frontend', esc_url( $this->assets_url ) . 'js/frontend' . $this->script_suffix . '.js', array( 'jquery' ), $this->_version );
 		wp_enqueue_script( $this->_token . '-frontend' );
+        wp_localize_script( $this->_token . '-frontend', 'ajax_object', ['ajax_url' => admin_url('admin-ajax.php')]);
 	} // End enqueue_scripts ()
 
 	/**
@@ -391,10 +402,9 @@ class Wrestlers_Leagues {
 
         $this->_register_post_types();
         $this->_register_taxonomies();
-        $this->_register_shortcodes();
-        $this->_register_post_handlers();
 
         $this->um_customize->init_profile_tabs();
+        $this->request_handlers->register_request_handlers();
 
     } // End install ()
 
@@ -527,119 +537,10 @@ class Wrestlers_Leagues {
      * register all required shortcodes
      */
     private function _register_shortcodes(){
-        if ( ! is_admin() ) {
-            add_shortcode( 'wl-create-leagues-form', array( $this, 'wl_create_leagues_form_shortcode' ) );
-            add_shortcode( 'wl-join-leagues-form', array( $this, 'wl_join_leagues_form_shortcode' ) );
-        }
-    }
-
-    /**
-     * Handle Shortcode [wl-create-leagues-form].
-     * @param $org_shortcode_atts
-     * @return mixed
-     */
-    public function wl_create_leagues_form_shortcode($org_shortcode_atts){
-        ob_start();
-        include WP_KWL_PLUGIN_DIR . "/templates/create-leagues-form.php";
-        $output = ob_get_clean();
-        return $output;
-    }
-
-    /**
-     * Handle Shortcode [wl-join-leagues-form].
-     * @param $org_shortcode_atts
-     * @return mixed
-     */
-    public function wl_join_leagues_form_shortcode($org_shortcode_atts){
-        ob_start();
-        include WP_KWL_PLUGIN_DIR . "/templates/join-leagues-form.php";
-        $output = ob_get_clean();
-        return $output;
-    }
-
-    /**
-     *
-     */
-    private function _register_post_handlers(){
-        ! is_admin() and add_action('init', array($this, 'post_create_league'));
-        ! is_admin() and add_action('init', array($this, 'post_join_league'));
-    }
-
-    /**
-     *
-     */
-    public function post_create_league(){
-        if ( !empty($_POST['action']) && $_POST['action'] === 'create_league' ) {
-
-            // Create post object
-            $my_post = array(
-                'post_title'    => wp_strip_all_tags( $_POST['lg_name'] ),
-                'post_status'   => 'publish',
-                'post_type' => Wrestlers_Leagues::$post_type_league,
-                'tax_input' => array(
-                    Wrestlers_Leagues::$taxonomy_leagues_category => Wrestlers_Leagues::$tax_term_leagues_public
-                )
-            );
-
-            // Insert the post into the database
-            $post_id = wp_insert_post( $my_post );
-            $user_id = get_current_user_id();
-            $user = wp_get_current_user();
-            $private_term_id = term_exists( Wrestlers_Leagues::$tax_term_leagues_private, Wrestlers_Leagues::$taxonomy_leagues_category);
-            wp_set_post_terms($post_id, $private_term_id['term_id'], Wrestlers_Leagues::$taxonomy_leagues_category);
-
-            if($post_id){
-                update_post_meta($post_id, Wrestlers_Leagues::$limit_teams_league_meta, $_POST["num_teams"]);
-                update_post_meta($post_id, Wrestlers_Leagues::$limit_wrestlers_team_meta, $_POST["num_wrestlers"]);
-                update_post_meta($post_id, Wrestlers_Leagues::$league_commissioner_meta, $user_id);
-            }
-
-            global $wpdb;
-            $league_user = array(
-                'league_id' => $post_id,
-                'user_id' => $user_id,
-                'team_name' => $user->display_name,
-                'date_join' => time(),
-                'is_commissioner' => 1,
-                'status' => 1,
-
-            );
-            $count = $wpdb->insert("{$wpdb->prefix}kwl_league_user", $league_user);
-            error_log("\nwrestler plugin: create league $count.");
-
-            if(isset($_POST['friends']) && class_exists("UM_Friends_API")){
-                $this->um_customize->invite_friends($_POST['friends'], $user_id, "Please join to league.");
-            }
-            header("Location: ".home_url("/user-profile"));
-            die();
-        }
-    }
-
-    /**
-     *
-     */
-    public function post_join_league(){
-        if ( !empty($_POST['action']) && $_POST['action'] === 'join_league' ) {
-            global $wpdb;
-            $user_id = get_current_user_id();
-            $league_user = array(
-                'league_id' => $_POST['league'],
-                'user_id' => $user_id,
-                'team_name' => $_POST['team_name'],
-                'date_join' => time(),
-                'is_commissioner' => 0,
-                'status' => 0,
-
-            );
-            $wpdb->insert("{$wpdb->prefix}kwl_league_user", $league_user);
-
-            if(isset($_POST['friends']) && class_exists("UM_Friends_API")){
-                $this->um_customize->invite_friends($_POST['friends'], $user_id, "Please join to league.");
-            }
-
-            header("Location: ".home_url("/user-profile"));
-            die();
-        }
+//        if ( ! is_admin() ) {
+//            add_shortcode( 'wl-create-leagues-form', array( $this, 'wl_create_leagues_form_shortcode' ) );
+//            add_shortcode( 'wl-join-leagues-form', array( $this, 'wl_join_leagues_form_shortcode' ) );
+//        }
     }
 
     /**

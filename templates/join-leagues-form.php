@@ -32,21 +32,22 @@ $user = wp_get_current_user();
                         'post_type'=> Wrestlers_Leagues::$post_type_league,
                         'order'    => 'ASC'
                     );
-                    global $post;
+                    global $post, $wpdb;
+
+                    $currentid = get_current_user_id();
                     $the_query = new WP_Query( $args );
                     if($the_query->have_posts() ) {
                         while ( $the_query->have_posts() ) {
                             $the_query->the_post();
-                            echo "<option value='{$post->ID}'>{$post->post_title}</option>";
+                            $teams = $wpdb->get_col("SELECT user_id FROM {$wpdb->prefix}kwl_league_user "
+                                ."WHERE league_id={$post->ID}");
+
+                            if(!in_array($currentid, $teams)){
+                                echo "<option value='{$post->ID}'>{$post->post_title}</option>";
+                            }
                         }
                     }
 
-                    $currentid = get_current_user_id();
-                    foreach ($players as $pl):
-                        if($pl->ID !== $currentid){
-                            echo '<option value="'.$pl->ID.'">'.$pl->display_name.'</option>';
-                        }
-                    endforeach;
                     ?>
 
                 </select>
@@ -65,7 +66,6 @@ $user = wp_get_current_user();
                         'order' => 'ASC'
                     );
                     $players = get_users($args1);
-                    $currentid = get_current_user_id();
                     foreach ($players as $pl):
                         if($pl->ID !== $currentid){
                             echo '<option value="'.$pl->ID.'">'.$pl->display_name.'</option>';
