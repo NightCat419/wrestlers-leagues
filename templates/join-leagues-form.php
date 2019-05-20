@@ -7,6 +7,9 @@
  */
 
 $user = wp_get_current_user();
+if(!empty($_GET['league_id'])){
+    $league_id = $_GET['league_id'];
+}
 ?>
 <form class="elementor-form" method="post" id="create_league_form" name="Create League">
     <input type="hidden" name="action" value="join_league"/>
@@ -20,6 +23,27 @@ $user = wp_get_current_user();
                 aria-required="true"
                 value="<?=$user->display_name;?>">
         </div>
+        <div class="elementor-column elementor-col-100" style="width: 100%;">
+            <div  style="margin-top: 10px;" class="elementor-field-type-text elementor-field-group elementor-column elementor-col-80 elementor-field-required elementor-mark-required">
+                <label for="friend_email" class="elementor-field-label">Email of Friend</label>
+                <input size="1" type="email" name="friend_email" id="friend_email"
+                       class="elementor-field elementor-size-sm  elementor-field-textual"
+                       placeholder="Please input email of friend"
+                       required="required"
+                       aria-required="true"
+                       value="">
+            </div>
+            <div  style="margin-top: 10px;" class="elementor-field-type-text elementor-field-group elementor-column elementor-col-20 elementor-field-required elementor-mark-required">
+                <button type="reset" class="elementor-button elementor-size-sm" style="margin: auto;margin-bottom: 0;" onclick="findLeagueByEmail(event);">
+                <span>
+                    <span class="elementor-align-icon-left elementor-button-icon">
+                        <i class="fa fa-find" aria-hidden="true"></i>
+                    </span>
+                    <span class="elementor-button-text">Find</span>
+                </span>
+                </button>
+            </div>
+        </div>
         <div style="margin-top: 10px;" class="elementor-field-type-select elementor-field-group elementor-column elementor-col-100 elementor-field-required elementor-mark-required">
             <label for="form-field-league" class="elementor-field-label">Select League</label>
             <div class="elementor-field elementor-select-wrapper ">
@@ -30,6 +54,8 @@ $user = wp_get_current_user();
                     <?php
                     $args = array(
                         'post_type'=> Wrestlers_Leagues::$post_type_league,
+                        'posts_per_page' => -1,
+                        'numberposts' => -1,
                         'order'    => 'ASC'
                     );
                     global $post, $wpdb;
@@ -43,34 +69,16 @@ $user = wp_get_current_user();
                                 ."WHERE league_id={$post->ID}");
 
                             if(!in_array($currentid, $teams)){
-                                echo "<option value='{$post->ID}'>{$post->post_title}</option>";
+                                if($league_id == $post->ID){
+                                    echo "<option value='{$post->ID}' selected>{$post->post_title}</option>";
+                                }
+                                else{
+                                    echo "<option value='{$post->ID}'>{$post->post_title}</option>";
+                                }
                             }
                         }
                     }
 
-                    ?>
-
-                </select>
-            </div>
-        </div>
-        <div style="margin-top: 10px;" class="elementor-field-type-select elementor-field-group elementor-column elementor-col-100 elementor-field-type-select-multiple ">
-            <label for="form-field-friends" class="elementor-field-label">Invite Friends</label>
-            <div class="elementor-field elementor-select-wrapper ">
-                <select name="friends[]" id="form-field-friends"
-                    class="elementor-field-textual elementor-size-sm"
-                    multiple="" size="6">
-                    <?php
-                    $args1 = array(
-                        'role' => 'sp_player',
-                        'orderby' => 'user_nicename',
-                        'order' => 'ASC'
-                    );
-                    $players = get_users($args1);
-                    foreach ($players as $pl):
-                        if($pl->ID !== $currentid){
-                            echo '<option value="'.$pl->ID.'">'.$pl->display_name.'</option>';
-                        }
-                    endforeach;
                     ?>
 
                 </select>
@@ -82,7 +90,7 @@ $user = wp_get_current_user();
                     <span class="elementor-align-icon-left elementor-button-icon">
                         <i class="fa fa-steam" aria-hidden="true"></i>
                     </span>
-                    <span class="elementor-button-text">Join League</span>
+                    <span class="elementor-button-text">Request To Join League</span>
                 </span>
             </button>
         </div>

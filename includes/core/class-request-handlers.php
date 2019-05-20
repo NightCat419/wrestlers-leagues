@@ -21,7 +21,21 @@ class Request_Handlers{
 
         add_action( 'wp_ajax_select_wrestler', [$this, 'ajax_select_wrestler'] );
         add_action( 'wp_ajax_wrestlers_in_league', [$this, 'ajax_wrestlers_in_league'] );
+        add_action( 'wp_ajax_find_league_email', [$this, 'ajax_find_league_email'] );
     }
+
+    public function ajax_find_league_email(){
+        if(!empty($_POST['friend_email'])){
+            global $wpdb;
+            $query="SELECT l.league_id, p.post_title AS league_name FROM {$wpdb->prefix}kwl_league_user AS l "
+                ."JOIN {$wpdb->prefix}users AS u ON l.commissioner_id=u.ID "
+                ."JOIN {$wpdb->prefix}posts AS p ON l.league_id=p.ID "
+                ."WHERE u.user_email='{$_POST['friend_email']}'";
+            $result = $wpdb->get_results($query);
+            wp_send_json($result);
+        }
+    }
+
 
     public function ajax_wrestlers_in_league(){
         if(!empty($_POST['league_id'])){
@@ -90,7 +104,8 @@ class Request_Handlers{
             error_log("\nwrestler plugin: create league $count.");
 
             if(isset($_POST['friends']) && class_exists("UM_Friends_API")){
-                $wl_instance->um_customize->invite_friends($_POST['friends'], $user_id, "Please join to league.");
+                $join_link = get_permalink( get_page_by_path('join-to-league-with-friends'))."?league_id={$post_id}";
+                $wl_instance->um_customize->invite_friends($_POST['friends'], $user_id, "Please join to this league {$_POST['lg_name']}: {$join_link}.");
             }
             header("Location: ".home_url("/my-leagues"));
             die();
@@ -116,7 +131,9 @@ class Request_Handlers{
             $result = $wpdb->insert("{$wpdb->prefix}kwl_league_user", $league_user);
 
             if(isset($_POST['friends']) && class_exists("UM_Friends_API")){
-                $wl_instance->um_customize->invite_friends($_POST['friends'], $user_id, "Please join to league.");
+                $league_title = get_the_title($_POST['league']);
+                $join_link = get_permalink( get_page_by_path('join-to-league-with-friends'))."?league_id={$_POST['league']}";
+                $wl_instance->um_customize->invite_friends($_POST['friends'], $user_id, "Please join to this league <link href='{$join_link}'>{$league_title}</link>.");
             }
 
             header("Location: ".home_url("/my-leagues"));
