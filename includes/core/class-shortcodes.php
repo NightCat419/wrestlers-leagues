@@ -16,6 +16,7 @@ class ShortCodes{
         if ( ! is_admin() ) {
             add_shortcode( 'wl-create-leagues-form', array( $this, 'wl_create_leagues_form_shortcode' ) );
             add_shortcode( 'wl-join-leagues-form', array( $this, 'wl_join_leagues_form_shortcode' ) );
+            add_shortcode( 'wl-register-join-form', array( $this, 'wl_register_join_form_shortcode' ) );
             add_shortcode( 'wl-my-leagues-page', array( $this, 'wl_my_leagues_page_shortcode' ) );
         }
     }
@@ -55,4 +56,17 @@ class ShortCodes{
         $output = ob_get_clean();
         return $output;
     }
+
+    /**
+     * Handle Shortcode [wl-register-join-form]
+     * @param $shortcode_attrs
+     * @return string
+     */
+    public function wl_register_join_form_shortcode($shortcode_attrs){
+        ob_start();
+        include WP_KWL_PLUGIN_DIR . "/templates/register-join-form.php";
+        $output = ob_get_clean();
+        return $output;
+    }
+
 }

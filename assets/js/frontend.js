@@ -38,7 +38,10 @@ jQuery(document).ready(function (e) {
         // jQuery.get(ajax_object.ajax_url + "?action=get_wrestlers", function (data) {
         //     console.log(data);
         // })
-    })
+    });
+
+    jQuery('#form-field-friends-selector').editableSelect();
+
 });
 
 function selectWrestler(event) {
@@ -75,4 +78,58 @@ function findLeagueByEmail(event) {
         }
 
     });
+}
+
+function rejectJoinRequest(requestID){
+    jQuery('<form>', {
+        "id": "rejectJoinRequest",
+        "method": "POST",
+        "html": '<input type="text" id="request_id" name="request_id" value="' + requestID + '" />'
+            + '<input type="hidden" name="action" value="reject_join_request">',
+
+    }).appendTo(document.body).submit();
+}
+
+function acceptJoinRequest(requestID) {
+    jQuery('<form>', {
+        "id": "acceptJoinRequest",
+        "method": "POST",
+        "html": '<input type="text" id="request_id" name="request_id" value="' + requestID + '" />'
+        + '<input type="hidden" name="action" value="accept_join_request">',
+
+    }).appendTo(document.body).submit();
+}
+
+function addFriend(event){
+    event.preventDefault();
+    var selected = jQuery('#form-field-friends-selector').siblings('.es-list').find('li.es-visible');
+    var value, text;
+    if(selected.length > 0){
+        value = selected.val();
+        text = selected.text();
+    }
+    else{
+        value = jQuery('#form-field-friends-selector').val();
+        text = value;
+        if(!validateEmail(value)){
+            alert('Please input valid email!');
+            return;
+        }
+    }
+    if(jQuery("#form-field-friends option[value='" + value + "']").length > 0){
+        alert("This is a already added friend!");
+        return;
+    }
+    var option = jQuery('<option/>', {
+        value: value,
+        text : text,
+        selected: true
+    });
+    jQuery('#form-field-friends').append(option);
+
+}
+
+function validateEmail(email) {
+    var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    return re.test(String(email).toLowerCase());
 }

@@ -33,12 +33,12 @@
                 value="4" required="required" aria-required="true"
                 min="4" max="10">
         </div>
-        <div style="margin-top: 10px;" class="elementor-field-type-select elementor-field-group elementor-column elementor-col-100 elementor-field-type-select-multiple ">
+        <div style="margin-top: 10px;" class="elementor-field-type-select elementor-field-group elementor-column elementor-col-100 elementor-field-type-select-multiple">
             <label for="form-field-friends" class="elementor-field-label">Invite Friends</label>
-            <div class="elementor-field elementor-select-wrapper ">
-                <select name="friends[]" id="form-field-friends"
-                    class="elementor-field-textual elementor-size-sm"
-                    multiple="" size="6">
+            <div class="elementor-field elementor-select-wrapper select-editable">
+                <select name="friends-selector" id="form-field-friends-selector" aria-required="true"
+                    class="elementor-field-textual elementor-size-sm">
+                    <option value=""></option>
                     <?php
                     $args1 = array(
                         'role' => 'sp_player',
@@ -53,6 +53,17 @@
                         }
                     endforeach;
                     ?>
+
+                </select>
+                <button class="elementor-button elementor-size-sm" onclick="addFriend(event)">Add</button>
+
+            </div>
+        </div>
+        <div style="margin-top: 10px;" class="elementor-field-type-select elementor-field-group elementor-column elementor-col-100 elementor-field-type-select-multiple">
+            <div class="elementor-field elementor-select-wrapper select-editable">
+                <select name="friends[]" id="form-field-friends" aria-required="true"
+                        class="elementor-field-textual elementor-size-sm disabled"
+                        multiple="" required >
 
                 </select>
             </div>

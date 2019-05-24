@@ -256,8 +256,9 @@
 }
 
 .modal {
-    height: 200px;
+    /*height: 200px;*/
     position: relative !important;
+    padding: 30px 30px;
 }
 
 .btn-wrestler-selected {
@@ -315,6 +316,290 @@ div.uimob800 .um-account-side li a.current:hover {
     color: #ec5153;
 }
 
+/*region for single-league-template.php*/
+.elementor-3191 .elementor-element.elementor-element-58d4ed4 {
+    margin-top: 40px;
+    margin-bottom: 40px;
+}
+
+.elementor-3191 .elementor-element.elementor-element-9df0f9c.elementor-column .elementor-column-wrap {
+    align-items: center;
+}
+
+.elementor-3191 .elementor-element.elementor-element-9df0f9c.elementor-column > .elementor-column-wrap > .elementor-widget-wrap {
+    align-content: center;
+}
+
+.elementor-3191 .elementor-element.elementor-element-e6b8b91.elementor-column .elementor-column-wrap {
+    align-items: center;
+}
+
+.elementor-3191 .elementor-element.elementor-element-e6b8b91.elementor-column > .elementor-column-wrap > .elementor-widget-wrap {
+    align-content: center;
+}
+
+.elementor-3191 .elementor-element.elementor-element-8b020c3.elementor-column .elementor-column-wrap {
+    align-items: center;
+}
+
+.elementor-3191 .elementor-element.elementor-element-8b020c3.elementor-column > .elementor-column-wrap > .elementor-widget-wrap {
+    align-content: flex-end;
+}
+
+.elementor-3191 .elementor-element.elementor-element-8793d97 {
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+.elementor-3191 .elementor-element.elementor-element-b951835 {
+    margin-top: 30px;
+    margin-bottom: 30px;
+}
+
+.elementor-3191 .elementor-element.elementor-element-4bfbb74 .premium-title-container {
+    text-align: left;
+}
+
+.elementor-3191 .elementor-element.elementor-element-4bfbb74 > .elementor-widget-container {
+    margin: 0px;
+}
+
+.elementor-3191 .elementor-element.elementor-element-28f9a09 .premium-title-container {
+    text-align: left;
+}
+
+.elementor-3191 .elementor-element.elementor-element-64bfb39 .bdt-tablepress .tablepress th {
+    text-align: center;
+    background-color: #ce0606;
+    color: #ffffff;
+    border-style: solid;
+    border-width: 1px;
+    border-color: #ccc;
+    padding: 1em 1em 1em 1em;
+}
+
+.elementor-3191 .elementor-element.elementor-element-64bfb39 .bdt-tablepress table.tablepress tr td {
+    text-align: center;
+}
+
+.elementor-3191 .elementor-element.elementor-element-64bfb39 .bdt-tablepress .dataTables_length {
+    display: none;
+}
+
+.elementor-3191 .elementor-element.elementor-element-64bfb39 .bdt-tablepress .dataTables_filter {
+    display: none;
+}
+
+.elementor-3191 .elementor-element.elementor-element-64bfb39 .bdt-tablepress .dataTables_info {
+    display: none;
+}
+
+.elementor-3191 .elementor-element.elementor-element-64bfb39 .bdt-tablepress .dataTables_paginate {
+    display: none;
+}
+
+.elementor-3191 .elementor-element.elementor-element-64bfb39 .bdt-tablepress table.tablepress {
+    border-style: solid;
+    border-width: 1px;
+    border-color: #ccc;
+}
+
+.elementor-3191 .elementor-element.elementor-element-64bfb39 .bdt-tablepress .tablepress .sorting:hover, .elementor-3191 .elementor-element.elementor-element-64bfb39 .bdt-tablepress .tablepress .sorting_asc, .elementor-3191 .elementor-element.elementor-element-64bfb39 .bdt-tablepress .tablepress .sorting_desc {
+    background-color: #000000;
+}
+
+.elementor-3191 .elementor-element.elementor-element-64bfb39 .bdt-tablepress .tablepress td {
+    border-style: solid;
+    border-width: 1px;
+    padding: 0.5em 1em 0.5em 1em;
+}
+
+.elementor-3191 .elementor-element.elementor-element-64bfb39 .bdt-tablepress .tablepress .odd td {
+    background-color: #000000;
+    color: #ffffff;
+    border-color: #ccc;
+}
+
+.elementor-3191 .elementor-element.elementor-element-64bfb39 .bdt-tablepress .tablepress .even td {
+    background-color: #f7f7f7;
+    border-color: #ccc;
+}
+
+.elementor-3191 .elementor-element.elementor-element-616ca1e .premium-title-container {
+    text-align: left;
+}
+
+.elementor-3191 .elementor-element.elementor-element-616ca1e > .elementor-widget-container {
+    margin: 10px 0px 10px 0px;
+}
+
+.elementor-3191 .elementor-element.elementor-element-6358968 .premium-title-container {
+    text-align: left;
+}
+
+.elementor-3191 .elementor-element.elementor-element-fec1a1f .bdt-tablepress .tablepress th {
+    text-align: center;
+    background-color: #ce0606;
+    color: #ffffff;
+    border-style: solid;
+    border-width: 1px;
+    border-color: #ccc;
+    padding: 1em 1em 1em 1em;
+}
+
+.elementor-3191 .elementor-element.elementor-element-fec1a1f .bdt-tablepress table.tablepress tr td {
+    text-align: center;
+}
+
+.elementor-3191 .elementor-element.elementor-element-fec1a1f .bdt-tablepress .dataTables_length {
+    display: none;
+}
+
+.elementor-3191 .elementor-element.elementor-element-fec1a1f .bdt-tablepress .dataTables_filter {
+    display: none;
+}
+
+.elementor-3191 .elementor-element.elementor-element-fec1a1f .bdt-tablepress .dataTables_info {
+    display: none;
+}
+
+.elementor-3191 .elementor-element.elementor-element-fec1a1f .bdt-tablepress .dataTables_paginate {
+    display: none;
+}
+
+.elementor-3191 .elementor-element.elementor-element-fec1a1f .bdt-tablepress table.tablepress {
+    border-style: solid;
+    border-width: 1px;
+    border-color: #ccc;
+}
+
+.elementor-3191 .elementor-element.elementor-element-fec1a1f .bdt-tablepress .tablepress .sorting:hover, .elementor-3191 .elementor-element.elementor-element-fec1a1f .bdt-tablepress .tablepress .sorting_asc, .elementor-3191 .elementor-element.elementor-element-fec1a1f .bdt-tablepress .tablepress .sorting_desc {
+    background-color: #000000;
+}
+
+.elementor-3191 .elementor-element.elementor-element-fec1a1f .bdt-tablepress .tablepress td {
+    border-style: solid;
+    border-width: 1px;
+    padding: 0.5em 1em 0.5em 1em;
+}
+
+.elementor-3191 .elementor-element.elementor-element-fec1a1f .bdt-tablepress .tablepress .odd td {
+    background-color: #000000;
+    color: #ffffff;
+    border-color: #ccc;
+}
+
+.elementor-3191 .elementor-element.elementor-element-fec1a1f .bdt-tablepress .tablepress .even td {
+    background-color: #f7f7f7;
+    border-color: #ccc;
+}
+
+.elementor-3191 .elementor-element.elementor-element-fa978a9 .premium-title-container {
+    text-align: left;
+}
+
+.elementor-3191 .elementor-element.elementor-element-fa978a9 > .elementor-widget-container {
+    margin: 10px 0px 10px 0px;
+}
+
+.elementor-3191 .elementor-element.elementor-element-4765835 .premium-title-container {
+    text-align: left;
+}
+
+.elementor-3191 .elementor-element.elementor-element-93f2345 .bdt-tablepress .tablepress th {
+    text-align: center;
+    background-color: #ce0606;
+    color: #ffffff;
+    border-style: solid;
+    border-width: 1px;
+    border-color: #ccc;
+    padding: 1em 1em 1em 1em;
+}
+
+.elementor-3191 .elementor-element.elementor-element-93f2345 .bdt-tablepress table.tablepress tr td {
+    text-align: center;
+}
+
+.elementor-3191 .elementor-element.elementor-element-93f2345 .bdt-tablepress .dataTables_length {
+    display: none;
+}
+
+.elementor-3191 .elementor-element.elementor-element-93f2345 .bdt-tablepress .dataTables_filter {
+    display: none;
+}
+
+.elementor-3191 .elementor-element.elementor-element-93f2345 .bdt-tablepress .dataTables_info {
+    display: none;
+}
+
+.elementor-3191 .elementor-element.elementor-element-93f2345 .bdt-tablepress .dataTables_paginate {
+    display: none;
+}
+
+.elementor-3191 .elementor-element.elementor-element-93f2345 .bdt-tablepress table.tablepress {
+    border-style: solid;
+    border-width: 1px;
+    border-color: #ccc;
+}
+
+.elementor-3191 .elementor-element.elementor-element-93f2345 .bdt-tablepress .tablepress .sorting:hover, .elementor-3191 .elementor-element.elementor-element-93f2345 .bdt-tablepress .tablepress .sorting_asc, .elementor-3191 .elementor-element.elementor-element-93f2345 .bdt-tablepress .tablepress .sorting_desc {
+    background-color: #000000;
+}
+
+.elementor-3191 .elementor-element.elementor-element-93f2345 .bdt-tablepress .tablepress td {
+    border-style: solid;
+    border-width: 1px;
+    padding: 0.5em 1em 0.5em 1em;
+}
+
+.elementor-3191 .elementor-element.elementor-element-93f2345 .bdt-tablepress .tablepress .odd td {
+    background-color: #000000;
+    color: #ffffff;
+    border-color: #ccc;
+}
+
+.elementor-3191 .elementor-element.elementor-element-93f2345 .bdt-tablepress .tablepress .even td {
+    background-color: #f7f7f7;
+    border-color: #ccc;
+}
+
+.elementor-widget .tippy-tooltip .tippy-content {
+    text-align: center;
+}
+
+.join-request{
+    color: white;
+    background-color: gray;
+}
+.join-request h3{
+    font-size: 20px;
+}
+.join-request h4{
+    font-size: 16px;
+}
+.disabled {
+    pointer-events: none;
+    -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none;
+    user-select: none;
+}
+.disabled *:focus { outline: 0; }
+
+.blocker{
+    z-index: 1001;
+}
+
+
+@media(min-width: 768px) {
+    /*.elementor-3191 .elementor-element.elementor-element-5176ef8 {*/
+        /*width:28.083%;*/
+    /*}*/
+
+    /*.elementor-3191 .elementor-element.elementor-element-9df0f9c {*/
+        /*width: 21.917%;*/
+    /*}*/
+}
+/*endregion single league page*/
+
 @media (min-width: 768px) {
     .wrestler-content .elementor-element.elementor-element-9bdbc62 {
         width: 8.64%;
@@ -346,5 +631,108 @@ div.uimob800 .um-account-side li a.current:hover {
 
     .wrestler-content .elementor-element.elementor-element-28453de {
         width: 45.913%;
+    }
+}
+.single-league-area{ padding: 100px 0;margin: 0 !important;}
+.single-league-area .elementor-heading-title.elementor-size-xl{ 
+    font-size: 18px !important;
+    font-weight: 700 !important;
+}
+
+.single-league-area .elementor-widget-heading .elementor-heading-title{ font-size: 14px;}
+.title-background{
+    background: #ce0606;
+    padding: 0;
+    color: #fff;
+    height: 75px !important;
+}
+
+.elementor-widget-wrap.background_title{margin-top: 10px;}
+.single-league-area .elementor-button-wrapper{text-align: right;}
+.custom-button{
+    background: #000;
+}
+div.single-league-area .elementor-widget-container .team_name{
+    font-size: 30px !important;
+    font-weight: 700 !important;
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+}
+.single_team_area{
+    margin-bottom: 30px;
+    padding-bottom: 30px;
+    border-top: 1px solid #ddd;
+    border-bottom: 1px solid #ddd;
+}
+.elementor-row.whole_background{
+    padding: 0;
+    color: #fff;
+    height: 10px !important;
+}
+.elementor-row.whole_background a.elementor-button-link.elementor-button.elementor-size-sm.accepted{
+    background: #ce0606 !important;
+}
+.elementor-row.whole_background a.elementor-button-link.elementor-button.elementor-size-sm.rejected{
+    background: #000 !important;
+}
+.elementor-row.whole_background h3.elementor-heading-title.elementor-size-xl.request_title{
+    font-size: 18px !important;
+    font-weight: 700 !important;
+}
+.section_margin{
+    margin: 0 !important;
+}
+section.elementor-element.elementor-element-8793d97.elementor-section-boxed.elementor-section-height-default.elementor-section-height-default.elementor-section.elementor-top-section.section_margin{
+margin-top: 30px !important;
+}
+.section_margin .extra_title{
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+}
+.section_margin .elementor-widget-wrap>.elementor-element{
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
+}
+.elementor-column-wrap.elementor-element-populated.joun_league_area {
+    height: 120px !important;
+    overflow: hidden;
+}
+.elementor-column-wrap.elementor-element-populated.joun_league_area .elementor-widget-wrap.background_title{
+    height: 20px !important;
+}
+
+.elementor-column-wrap.elementor-element-populated.joun_league_area{
+    background: #808080;
+    height: 95px;
+    background: url(https://lds.sos4digitalmarketing.com/wp-content/uploads/2019/03/black-background-2.png) no-repeat;
+}
+.joun_league_area section.join-request {
+    height: 60px !important;
+    margin: 0 auto;
+    width: 86%;
+    background: transparent !important;
+}
+.customer-join-request-area{ height: 30px !important;}
+
+@media (max-width: 767px){
+    .title-background,
+    .elementor-row.whole_background{
+        height: 100% !important;
+    }
+    section.join-request.customer-join-request-area {
+        height: 50px !important;
+    }
+    .joun_league_area section.join-request {
+        height: 190px !important;
+        text-align: center !important;
+    }
+    .elementor-widget-wrap>.elementor-element,
+    .single-league-area .elementor-button-wrapper {
+        width: 100%;
+        text-align: center !important;
+    }
+    .elementor-column-wrap.elementor-element-populated.joun_league_area {
+        height: 100% !important;
+        overflow: hidden;
     }
 }

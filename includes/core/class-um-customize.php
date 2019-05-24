@@ -18,26 +18,31 @@ class UM_Customize{
     }
 
     public function init_profile_tabs(){
-//        add_filter('um_profile_tabs', array($this, 'leagues_tab'), 1000 );
-//        add_action('um_profile_content_leagues_default', array($this, 'um_profile_content_leagues_default'));
+        add_filter('um_profile_tabs', array($this, 'leagues_tab'), 1000 );
+        add_action('um_profile_content_leagues_default', array($this, 'um_profile_content_leagues_default'));
+        add_action( 'um_registration_complete', [$this, 'my_registration_complete'], 10, 2 );
+    }
+
+    function my_registration_complete( $user_id, $args ) {
 
     }
 
     /* add a custom tab to show user pages */
-//    function leagues_tab( $tabs ) {
-//        $tabs['leagues'] = array(
-//            'name' => 'My Leagues',
-//            'icon' => 'um-faicon-pencil',
-//            'custom' => true
-//        );
-//        return $tabs;
-//    }
-//
-//    /* Tell the tab what to display */
-//    function um_profile_content_leagues_default( $args ) {
-//        global $ultimatemember;
-//        include_once WP_KWL_PLUGIN_DIR . '/templates/my-leagues-page.php';
-//    }
+    function leagues_tab( $tabs ) {
+        $tabs['leagues'] = array(
+            'name' => 'My Leagues',
+            'icon' => 'um-faicon-pencil',
+            'custom' => true
+        );
+        return $tabs;
+    }
+
+    /* Tell the tab what to display */
+    function um_profile_content_leagues_default( $args ) {
+        global $ultimatemember;
+        header("Location: ".home_url("/my-leagues"));
+        die();
+    }
 
     public function invite_friends($friends, $sender, $message){
         foreach ($friends as $friendid){

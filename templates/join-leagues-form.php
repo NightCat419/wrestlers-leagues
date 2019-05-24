@@ -51,38 +51,18 @@ if(!empty($_GET['league_id'])){
                         class="elementor-field-textual elementor-size-sm"
                         required="required"
                         aria-required="true">
-                    <?php
-                    $args = array(
-                        'post_type'=> Wrestlers_Leagues::$post_type_league,
-                        'posts_per_page' => -1,
-                        'numberposts' => -1,
-                        'order'    => 'ASC'
-                    );
-                    global $post, $wpdb;
-
-                    $currentid = get_current_user_id();
-                    $the_query = new WP_Query( $args );
-                    if($the_query->have_posts() ) {
-                        while ( $the_query->have_posts() ) {
-                            $the_query->the_post();
-                            $teams = $wpdb->get_col("SELECT user_id FROM {$wpdb->prefix}kwl_league_user "
-                                ."WHERE league_id={$post->ID}");
-
-                            if(!in_array($currentid, $teams)){
-                                if($league_id == $post->ID){
-                                    echo "<option value='{$post->ID}' selected>{$post->post_title}</option>";
-                                }
-                                else{
-                                    echo "<option value='{$post->ID}'>{$post->post_title}</option>";
-                                }
-                            }
-                        }
-                    }
-
-                    ?>
 
                 </select>
             </div>
+        </div>
+        <div  style="margin-top: 10px;" class="elementor-field-type-text elementor-field-group elementor-column elementor-col-100 elementor-field-required elementor-mark-required">
+            <label for="client_email" class="elementor-field-label">Your Email</label>
+            <input size="1" type="email" name="client_email" id="client_email"
+                   class="elementor-field elementor-size-sm  elementor-field-textual"
+                   placeholder="Please input your email to receive notification."
+                   required="required"
+                   aria-required="true"
+                   value="">
         </div>
         <div style="margin-top: 10px;" class="elementor-field-group elementor-column elementor-field-type-submit elementor-col-100">
             <button type="submit" class="elementor-button elementor-size-sm" style="margin: auto;">
